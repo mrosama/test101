@@ -1,3 +1,3 @@
 <?php 
 
-echo "Api....";
+echo "Api....Call Json";
