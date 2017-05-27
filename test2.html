@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+        #canvas {
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            border: 1px solid Black;
+            cursor: crosshair;
+            /*  image-rendering: optimizeSpeed;
+            /* Older versions of FF          */
+            image-rendering: -moz-crisp-edges;
+            /* FF 6.0+                       */
+            image-rendering: -webkit-optimize-contrast;
+            /* Safari                        */
+            image-rendering: -o-crisp-edges;
+            /* OS X & Windows Opera (12.02+) */
+            image-rendering: pixelated;
+            /* Awesome future-browsers       */
+            -ms-interpolation-mode: nearest-neighbor;
+        }
+        
+        #buffer {
+            width: 100%;
+            height: 100%;
+            background-color: fff;
+            border: 1px solid green;
+            cursor: crosshair;
+            /*  image-rendering: optimizeSpeed;
+            /* Older versions of FF          */
+            image-rendering: -moz-crisp-edges;
+            /* FF 6.0+                       */
+            image-rendering: -webkit-optimize-contrast;
+            /* Safari                        */
+            image-rendering: -o-crisp-edges;
+            /* OS X & Windows Opera (12.02+) */
+            image-rendering: pixelated;
+            /* Awesome future-browsers       */
+            -ms-interpolation-mode: nearest-neighbor;
+        }
+    </style>
+</head>
+
+<body>
+
+    <table width=100% border=1>
+
+        <tr>
+
+            <td width="80%">
+                <canvas id="canvas" width="500" height="500">  
+  </canvas>
+                <canvas id="buffer" width="500" height="500" style="display:none;"></canvas>
+            </td>
+            <td>Link</td>
+        </tr>
+
+
+    </table>
+
+
+
+    <script>
+        $(document).ready(function() {
+            var mousePressed = false;
+            var lastX, lastY;
+            var ctx;
+
+
+            var c = document.getElementById("canvas");
+            var ctx = c.getContext("2d");
+
+
+            var c2 = document.getElementById("buffer");
+            var ctx2 = c.getContext("2d");
+
+
+            /////////////////
+            resizeCanavs();
+            $(window).on("resize", function() {
+                resizeCanavs();
+            });
+            /////////////
+
+
+            drawlines();
+
+
+
+            function drawlines() {
+                console.log('dr');
+
+                ctx.beginPath();
+                //   ctx.lineWidth = 10;
+                //   ctx.lineJoin = ctx.lineCap = 'round';
+                //   ctx.fillStyle = "#CC00FF";
+                //  ctx.lineStyle = "#ffff00";
+                ctx.moveTo(0, 0);
+                ctx.lineTo(500, 300);
+                ctx.stroke();
+                ///
+                /*
+                                ctx2.beginPath();
+                                ctx2.moveTo(0, 0);
+                                ctx2.lineTo(500, 300);
+                                ctx2.stroke();*/
+
+
+            }
+            ///////////////////////////////////////////////
+
+            function resizeCanavs() {
+                var width = document.getElementById('canvas').offsetWidth;
+                var height = document.getElementById('canvas').offsetHeight;
+                console.log(width + '::' + height);
+
+
+                /// drawlines();
+
+                buffer.width = width;
+                buffer.height = height;
+                c2.getContext('2d').drawImage(c, 0, 0, width, height);
+
+
+                canvas.width = width;
+                canvas.height = height;
+                c.getContext('2d').drawImage(c2, 0, 0);
+
+                // canvas.width = width;
+                //  canvas.height = height;
+
+
+
+            }
+            //****************************************************************
+
+            $('#canvas').mousedown(function(e) {
+                mousePressed = true;
+                var rect = canvas.getBoundingClientRect();
+                Draw(e.clientX - rect.left, e.clientY - rect.top, false);
+
+                //  var offset = $(this).offset();
+                //  var mouseX = e.pageX - offset.left;
+                //   var mouseY = e.pageY - offset.top;
+                //  Draw(mouseX, mouseY, false);
+
+
+
+            });
+
+
+
+            $('#canvas').mousemove(function(e) {
+                var rect = canvas.getBoundingClientRect();
+                if (mousePressed) {
+                    //   Draw(e.clientX - rect.left, e.clientY - rect.top, true);
+
+                    var offset = $(this).offset();
+                    var mouseX = e.pageX - offset.left;
+                    var mouseY = e.pageY - offset.top;
+                    Draw(mouseX, mouseY, true);
+
+
+
+                }
+            });
+
+
+
+
+            $('#canvas').mouseup(function(e) {
+                mousePressed = false;
+            });
+            $('#canvas').mouseleave(function(e) {
+                mousePressed = false;
+            });
+
+
+            function Draw(x, y, isDown) {
+
+                console.log(x, y, isDown);
+                if (isDown) {
+                    ctx.beginPath();
+                    //  ctx.strokeStyle = $('#selColor').val();
+                    //    ctx.lineWidth = $('#selWidth').val();
+                    ctx.lineJoin = "round";
+                    ctx.lineWidth = 10;
+                    ctx.moveTo(lastX, lastY);
+                    ctx.lineTo(x, y);
+                    ctx.closePath();
+                    ctx.stroke();
+
+                    //
+
+                    /*    ctx2.beginPath();
+                        //  ctx.strokeStyle = $('#selColor').val();
+                        //    ctx.lineWidth = $('#selWidth').val();
+                        ctx2.lineJoin = "round";
+                        ctx2.moveTo(lastX, lastY);
+                        ctx2.lineTo(x, y);
+                        ctx2.closePath();
+                        ctx2.stroke();
+                        */
+
+
+
+                    //
+                }
+                lastX = x;
+                lastY = y;
+            }
+
+
+
+
+
+
+
+
+            //
+
+        });
+    </script>
+
+
+</body>
+
+</html>

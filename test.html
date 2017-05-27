@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <style type="text/css">
+        /* Remove margins and HTML scrollbars */
+        
+        BODY,
+        HTML {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <table width=100% border=1>
+
+        <tr>
+
+            <td width="80%">
+                <canvas id="canvas" width="500" height="500">  
+  </canvas>
+            </td>
+            <td>Link</td>
+        </tr>
+
+
+    </table>
+
+
+
+
+
+
+    <style>
+        #canvas {
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            border: 1px solid Black;
+            cursor: crosshair;
+            image-rendering: optimizeSpeed;
+            /* Older versions of FF          */
+            image-rendering: -moz-crisp-edges;
+            /* FF 6.0+                       */
+            image-rendering: -webkit-optimize-contrast;
+            /* Safari                        */
+            image-rendering: -o-crisp-edges;
+            /* OS X & Windows Opera (12.02+) */
+            image-rendering: pixelated;
+            /* Awesome future-browsers       */
+            -ms-interpolation-mode: nearest-neighbor;
+        }
+    </style>
+
+    <script>
+        //touch click helper
+        var c = document.getElementById("canvas");
+        var ctx = c.getContext("2d");
+
+        function resize(canvas) {
+            console.log('run...')
+                // Lookup the size the browser is displaying the canvas.
+            var displayWidth = canvas.clientWidth;
+            var displayHeight = canvas.clientHeight;
+
+            // Check if the canvas is not the same size.
+            if (canvas.width != displayWidth ||
+                canvas.height != displayHeight) {
+
+                // Make the canvas the same size
+                canvas.width = displayWidth;
+                canvas.height = displayHeight;
+            }
+        }
+        /*  function resize() {
+              $("#canvas").outerHeight($(window).height() - $("#canvas").offset().top - Math.abs($("#canvas").outerHeight(true) - $("#canvas").outerHeight()));
+
+
+              //  var c = document.getElementById("canvas");
+              //  var ctx = c.getContext("2d");
+
+              //  ctx.canvas.width = window.innerWidth;
+              //  ctx.canvas.height = window.innerHeight;
+
+
+          }*/
+        $(document).ready(function() {
+            resize(ctx);
+            $(window).on("resize", function() {
+                resize(ctx);
+            });
+        });
+
+
+
+        var c = document.getElementById("canvas");
+        var ctx = c.getContext("2d");
+        // ctx.scale(0.5, 0.5);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(500, 300);
+        ctx.stroke();
+
+
+
+        /*   canvas.addEventListener('touchmove', function(evt) {
+               var c = document.getElementById("canvas");
+               var ctx = c.getContext("2d");
+
+
+               if (evt.touches) {
+                   if (evt.touches.length == 1) { // Only deal with one finger
+                       var touch = evt.touches[0]; // Get the information for finger #1
+                       touchX = touch.pageX - touch.target.offsetLeft;
+                       touchY = touch.pageY - touch.target.offsetTop;
+                   }
+               }
+               console.log(touchX, touchY)
+
+               ctx.beginPath();
+               ctx.moveTo(0, 0);
+               ctx.lineTo(touchX, touchY);
+
+
+
+               evt.preventDefault();
+               ctx.stroke();
+           }, false);*/
+
+
+        var mousePressed = false;
+        var lastX, lastY;
+        var ctx;
+        InitThis();
+
+        function InitThis() {
+            ctx = document.getElementById('canvas').getContext("2d");
+            //  ctx.scale(0.9, 0.9);
+            $('#canvas').mousedown(function(e) {
+                mousePressed = true;
+                var rect = canvas.getBoundingClientRect();
+                Draw(e.clientX - rect.left, e.clientY - rect.top, false);
+
+                //  var offset = $(this).offset();
+                //  var mouseX = e.pageX - offset.left;
+                //   var mouseY = e.pageY - offset.top;
+                //  Draw(mouseX, mouseY, false);
+
+
+
+            });
+
+            $('#canvas').mousemove(function(e) {
+                var rect = canvas.getBoundingClientRect();
+                if (mousePressed) {
+                    //   Draw(e.clientX - rect.left, e.clientY - rect.top, true);
+
+                    var offset = $(this).offset();
+                    var mouseX = e.pageX - offset.left;
+                    var mouseY = e.pageY - offset.top;
+                    Draw(mouseX, mouseY, true);
+
+
+
+                }
+            });
+
+            $('#canvas').mouseup(function(e) {
+                mousePressed = false;
+            });
+            $('#myCanvas').mouseleave(function(e) {
+                mousePressed = false;
+            });
+        }
+
+        function Draw(x, y, isDown) {
+
+            console.log(x, y, isDown);
+            if (isDown) {
+                ctx.beginPath();
+                //  ctx.strokeStyle = $('#selColor').val();
+                //    ctx.lineWidth = $('#selWidth').val();
+                ctx.lineJoin = "round";
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(x, y);
+                ctx.closePath();
+                ctx.stroke();
+            }
+            lastX = x;
+            lastY = y;
+        }
+
+        function clearArea() {
+            // Use the identity matrix while clearing the canvas
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+            var width = document.getElementById('canvas').offsetWidth;
+            //offsetHeight
+            alert(width)
+
+        }
+    </script>
+
+
+
+</body>
+
+</html>
